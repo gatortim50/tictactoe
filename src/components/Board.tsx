@@ -100,11 +100,15 @@ function Board() {
         ) : (
         <View>
           <Text style={styles.message}>{winMessage}</Text>
+          
+          <View style={[{ width: "90%", margin: 10, borderRadius: 5, backgroundColor: "blue" }]}>
           <Button
             onPress={reloadGame}
             title="Reload Game"
-            color="blue"
+            color="white"
+            style={[{borderRadius: 5,}]}
           />
+        </View>
         </View>
       )}
     </>
