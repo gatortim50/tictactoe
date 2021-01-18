@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Button, StyleSheet, Dimensions, View, Text } from "react-native";
-import Square from "./Square";
+import React, { useState, useEffect } from 'react';
+import { Button, StyleSheet, Dimensions, View, Text } from 'react-native';
+import Square from './Square';
 import Snackbar from 'react-native-snackbar';
 
-const boardSize = Dimensions.get("window").width - 25;
+const boardSize = Dimensions.get('window').width - 25;
 
 function calculateWinner(squares) {
   const lines = [
@@ -28,43 +28,41 @@ function calculateWinner(squares) {
 function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [xIsNext, setXisNext] = useState(true);
-  const [winMessage, setWinMessage] = useState("")
+  const [winMessage, setWinMessage] = useState('');
   let winner = calculateWinner(squares);
 
   const handlePress = (i) => {
     const squaresCopy = [...squares];
     if (winner || squaresCopy[i]) {
-      if(winner) {
+      if (winner) {
         return Snackbar.show({
           text: winMessage,
           backgroundColor: '#000000',
-          textColor: '#FFFFFF'
-        })
+          textColor: '#FFFFFF',
+        });
       }
       return;
     }
 
-    squaresCopy[i] = xIsNext ? "X" : "O";
+    squaresCopy[i] = xIsNext ? 'X' : 'O';
     setSquares(squaresCopy);
     setXisNext(!xIsNext);
   };
 
   const reloadGame = () => {
-    setXisNext(true)
-    setWinMessage('')
-    squares.fill('',0,9)
+    setXisNext(true);
+    setWinMessage('');
+    squares.fill('', 0, 9);
     winner = !winner;
-    console.log('winner:', winner);
-    console.log('squares:', squares);
-  }
+  };
 
   useEffect(() => {
     if (winner) {
-      setWinMessage(`Player  ${winner} won`)
+      setWinMessage(`Player  ${winner} won`);
     } else {
-      setWinMessage("")
+      setWinMessage('');
     }
-  }, [squares]);
+  }, [squares, winner]);
 
   let generateSquare = (i) => {
     return (
@@ -91,24 +89,17 @@ function Board() {
           {generateSquare(8)}
         </View>
       </View>
-      {!winner 
-        ?
-        (
-          <Text style={styles.message}>
-            It's Player {xIsNext ? "X" : "O"}'s Turn!
-          </Text>
-        ) : (
+      {!winner ? (
+        <Text style={styles.message}>
+          It's Player {xIsNext ? 'X' : 'O'}'s Turn!
+        </Text>
+      ) : (
         <View>
           <Text style={styles.message}>{winMessage}</Text>
-          
-          <View style={[{ width: "90%", margin: 10, borderRadius: 5, backgroundColor: "blue" }]}>
-          <Button
-            onPress={reloadGame}
-            title="Reload Game"
-            color="white"
-            style={[{borderRadius: 5,}]}
-          />
-        </View>
+
+          <View style={styles.buttonStyle}>
+            <Button onPress={reloadGame} title="Reload Game" color="white" />
+          </View>
         </View>
       )}
     </>
@@ -120,19 +111,25 @@ const styles = StyleSheet.create({
     width: boardSize,
     height: boardSize,
     borderWidth: 4,
-    borderColor: "#20232a",
+    borderColor: '#20232a',
     borderRadius: 6,
     padding: 10,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   boardRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   message: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 25,
-    fontWeight: "bold",
+    fontWeight: 'bold',
+  },
+  buttonStyle: {
+    width: '90%',
+    margin: 10,
+    borderRadius: 5,
+    backgroundColor: 'blue',
   },
 });
 
