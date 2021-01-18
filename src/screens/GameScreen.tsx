@@ -8,7 +8,7 @@ function GameScreen(props) {
     <Screen>
       <ImageBackground
         style={stlyes.background}
-        source={require("../images/gamebg.jpg")}
+        source={require("../images/background_blue_to_green.png")}
       >
         <Board />
       </ImageBackground>

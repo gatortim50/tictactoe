@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Dimensions, View, Text } from "react-native";
+import { Button, StyleSheet, Dimensions, View, Text } from "react-native";
 import Square from "./Square";
+import Snackbar from 'react-native-snackbar';
 
 const boardSize = Dimensions.get("window").width - 25;
 
@@ -27,11 +28,19 @@ function calculateWinner(squares) {
 function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [xIsNext, setXisNext] = useState(true);
-  const winner = calculateWinner(squares);
+  const [winMessage, setWinMessage] = useState("")
+  let winner = calculateWinner(squares);
 
   const handlePress = (i) => {
     const squaresCopy = [...squares];
     if (winner || squaresCopy[i]) {
+      if(winner) {
+        return Snackbar.show({
+          text: winMessage,
+          backgroundColor: '#000000',
+          textColor: '#FFFFFF'
+        })
+      }
       return;
     }
 
@@ -40,8 +49,21 @@ function Board() {
     setXisNext(!xIsNext);
   };
 
+  const reloadGame = () => {
+    setXisNext(true)
+    setWinMessage('')
+    squares.fill('',0,9)
+    winner = !winner;
+    console.log('winner:', winner);
+    console.log('squares:', squares);
+  }
+
   useEffect(() => {
-    if (winner) alert(`Player ${winner} won!`);
+    if (winner) {
+      setWinMessage(`Player  ${winner} won`)
+    } else {
+      setWinMessage("")
+    }
   }, [squares]);
 
   let generateSquare = (i) => {
@@ -69,12 +91,22 @@ function Board() {
           {generateSquare(8)}
         </View>
       </View>
-      {!winner && (
-        <Text style={styles.message}>
-          It's Player {xIsNext ? "X" : "O"}'s Turn!
-        </Text>
+      {!winner 
+        ?
+        (
+          <Text style={styles.message}>
+            It's Player {xIsNext ? "X" : "O"}'s Turn!
+          </Text>
+        ) : (
+        <View>
+          <Text style={styles.message}>{winMessage}</Text>
+          <Button
+            onPress={reloadGame}
+            title="Reload Game"
+            color="blue"
+          />
+        </View>
       )}
-      {winner && <Text style={styles.message}>Player {winner} Won!</Text>}
     </>
   );
 }
